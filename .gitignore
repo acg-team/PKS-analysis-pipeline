@@ -416,3 +416,14 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Nextflow files
+.nextflow/
+.nextflow.log*
+
+# MacOS files
+.DS_Store
+	
+# Work and results dirs
+results/
+work/
