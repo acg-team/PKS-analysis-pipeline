@@ -1,0 +1,87 @@
+#!/usr/bin/env nextflow
+
+nextflow.enable.dsl = 2
+
+/*
+ * This pipeline takes FASTA files, aligns them with PRANK and MAFFT,
+ * then runs RAxML-ng to infer phylogenies with automatic model selection and
+ * tree search 
+ */
+
+// Define parameters with default values
+params.input = "data/*.fasta"
+params.outdir = "results"
+
+process align_prank {
+    publishDir "${params.outdir}/prank", mode: 'copy'
+
+    input:
+    path fasta
+
+    output:
+    path "${fasta.baseName}.prank.aln"
+
+    script:
+    // PRANK's output is .best.fas, so we rename it for clarity.
+    """
+    prank -d=${fasta} -o=${fasta.baseName}.prank -F
+    mv ${fasta.baseName}.prank.best.fas ${fasta.baseName}.prank.aln
+    """
+}
+
+process align_mafft {
+    publishDir "${params.outdir}/mafft", mode: 'copy'
+
+    input:
+    path fasta
+
+    output:
+    path "${fasta.baseName}.mafft.aln"
+
+    script:
+    """
+    mafft --auto ${fasta} > ${fasta.baseName}.mafft.aln
+    """
+}
+
+process run_raxml_ng {
+    publishDir "${params.outdir}/raxml", mode: 'copy'
+
+    input:
+    path alignment
+
+    output:
+    path "${alignment.baseName}.raxml.*"
+
+    script:
+    """
+    raxml-ng-2 --msa ${alignment} --model AA --moose-options substitution-models=DCMut,JTT,JTT-DCMut,LG,PMB,Q.pfam,Q.yeast,VT,WAG,PROTGTR --opt-topology adaptive --prefix ${alignment.baseName}.raxml
+    """
+}
+
+//
+// WORKFLOW
+//
+
+workflow {
+    println(
+        """
+    PKS Analysis Pipeline
+    Input files: ${params.input}
+    Output dir : ${params.outdir}
+    """
+    )
+
+    // Create a channel for input files
+    fasta_files_ch = channel.fromPath(params.input)
+
+    // Align sequences using both PRANK and MAFFT
+    prank_alignments = align_prank(fasta_files_ch)
+    mafft_alignments = align_mafft(fasta_files_ch)
+
+    // Combine the results from both alignment tools into a single channel
+    all_alignments = prank_alignments.mix(mafft_alignments)
+
+    // Run RAxML-ng on each alignment
+    run_raxml_ng(all_alignments)
+}
