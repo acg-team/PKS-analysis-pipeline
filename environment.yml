@@ -1,0 +1,12 @@
+name: polyketide_analysis
+channels:
+  - bioconda
+  - defaults
+dependencies:
+  - prank
+  - mafft
+  - openjdk
+  - conda-build
+  - anaconda-client
+  - junniest::raxml-ng
+
