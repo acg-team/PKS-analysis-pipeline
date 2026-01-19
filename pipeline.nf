@@ -11,6 +11,7 @@ nextflow.enable.dsl = 2
 // Define parameters with default values
 params.input = "data/*.fasta"
 params.outdir = "results"
+
 process preprocess_fasta {
     publishDir "${params.outdir}/cleaned_fasta", mode: 'copy'
 
@@ -33,13 +34,13 @@ process align_prank {
     path fasta
 
     output:
-    path "${fasta.baseName}.prank.aln"
+    path "${fasta.baseName}.prank.fasta"
 
     script:
     // PRANK's output is .best.fas, so we rename it for clarity.
     """
     prank -d=${fasta} -o=${fasta.baseName}.prank -F
-    mv ${fasta.baseName}.prank.best.fas ${fasta.baseName}.prank.aln
+    mv ${fasta.baseName}.prank.best.fas ${fasta.baseName}.prank.fasta
     """
 }
 
@@ -50,11 +51,11 @@ process align_mafft {
     path fasta
 
     output:
-    path "${fasta.baseName}.mafft.aln"
+    path "${fasta.baseName}.mafft.fasta"
 
     script:
     """
-    mafft --auto ${fasta} > ${fasta.baseName}.mafft.aln
+    mafft --auto ${fasta} > ${fasta.baseName}.mafft.fasta
     """
 }
 
