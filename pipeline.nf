@@ -11,6 +11,20 @@ nextflow.enable.dsl = 2
 // Define parameters with default values
 params.input = "data/*.fasta"
 params.outdir = "results"
+process preprocess_fasta {
+    publishDir "${params.outdir}/cleaned_fasta", mode: 'copy'
+
+    input:
+    path fasta
+
+    output:
+    path "${fasta.baseName}.clean.fasta"
+
+    script:
+    """
+    sed "s/\\['//g; s/']//g" ${fasta} > ${fasta.baseName}.clean.fasta
+    """
+}
 
 process align_prank {
     publishDir "${params.outdir}/prank", mode: 'copy'
@@ -74,6 +88,8 @@ workflow {
 
     // Create a channel for input files
     fasta_files_ch = channel.fromPath(params.input)
+    // Preprocess FASTA files
+    clean_fasta_ch = preprocess_fasta(fasta_files_ch)
 
     // Align sequences using both PRANK and MAFFT
     prank_alignments = align_prank(fasta_files_ch)
