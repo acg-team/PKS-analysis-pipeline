@@ -89,12 +89,13 @@ workflow {
 
     // Create a channel for input files
     fasta_files_ch = channel.fromPath(params.input)
+
     // Preprocess FASTA files
     clean_fasta_ch = preprocess_fasta(fasta_files_ch)
 
     // Align sequences using both PRANK and MAFFT
-    prank_alignments = align_prank(fasta_files_ch)
-    mafft_alignments = align_mafft(fasta_files_ch)
+    prank_alignments = align_prank(clean_fasta_ch)
+    mafft_alignments = align_mafft(clean_fasta_ch)
 
     // Combine the results from both alignment tools into a single channel
     all_alignments = prank_alignments.mix(mafft_alignments)
