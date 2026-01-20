@@ -85,7 +85,7 @@ process run_beast {
     path "*.log"
     path "*.trees"
     path "*.xml"
-    path "*.ops"
+    path "*.xml.state"
 
     script:
     """
