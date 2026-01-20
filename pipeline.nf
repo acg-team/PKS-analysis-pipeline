@@ -74,23 +74,36 @@ process run_raxml_ng {
     """
 }
 
-process run_beast {
-    publishDir "${params.outdir}/beast", mode: 'copy'
-    cpus 4
+process generate_beast_xml {
+    publishDir "${params.outdir}/beast_xml", mode: 'copy'
 
     input:
     path alignment
 
     output:
-    path "*.log"
-    path "*.trees"
     path "*.xml"
-    path "*.xml.state"
 
     script:
     """
     python ${workflow.projectDir}/scripts/beast_configuration.py --alignment ${alignment} --output ${alignment.baseName}.xml
-    beast -overwrite ${alignment.baseName}.xml
+    """
+}
+
+process run_beast {
+    publishDir "${params.outdir}/beast", mode: 'copy'
+    cpus 4
+
+    input:
+    path xml
+
+    output:
+    path "*.log"
+    path "*.trees"
+    path "*.xml.state"
+
+    script:
+    """
+    beast -threads ${task.cpus} -overwrite ${xml}
     """
 }
 
@@ -117,8 +130,9 @@ workflow {
     all_alignments = prank_alignments.mix(mafft_alignments)
 
     // Run RAxML-ng on each alignment
-    run_raxml_ng(all_alignments)
+    //run_raxml_ng(all_alignments)
 
     // Run BEAST on each alignment
-    run_beast(all_alignments)
+    beast_xml_ch = generate_beast_xml(all_alignments)
+    run_beast(beast_xml_ch)
 }
