@@ -23,8 +23,8 @@ The analysis environment includes the following key software versions defined in
 *   **Python 3.12**
 *   [**PRANK**](https://ariloytynoja.github.io/prank-msa/) v.170427
 *   [**MAFFT**](https://mafft.cbrc.jp/alignment/server/index.html) v7.526
-*   [**RAxML-ng**](https://github.com/amkozlov/raxml-ng) v2.0-beta3 (supports automatic model selection)
-*   [**BEAST 2**](https://www.beast2.org/) v2.6.3
+*   [**RAxML-NG**](https://github.com/amkozlov/raxml-ng) v2.0-beta3 (supports automatic model selection)
+*   [**BEAST2**](https://www.beast2.org/) v2.6.3
 
 ### Cluster Setup
 
@@ -54,7 +54,7 @@ micromamba config --set channel_priority disabled
 micromamba create -f environment.yml
 ```
 
-## Running the analysis
+## Running The Analysis
 
 **Prerequisites**:
 1. `micromamba` and `nextflow`  installed, pre-configured `micromamba` environment created but not activated.
