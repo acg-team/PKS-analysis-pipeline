@@ -5,7 +5,7 @@ nextflow.enable.dsl = 2
 /*
  * This pipeline takes FASTA files, aligns them with PRANK and MAFFT,
  * then runs RAxML-ng to infer phylogenies with automatic model selection and
- * tree search 
+ * tree search
  */
 
 // Define parameters with default values
@@ -130,7 +130,7 @@ workflow {
     all_alignments = prank_alignments.mix(mafft_alignments)
 
     // Run RAxML-ng on each alignment
-    //run_raxml_ng(all_alignments)
+    run_raxml_ng(all_alignments)
 
     // Run BEAST on each alignment
     beast_xml_ch = generate_beast_xml(all_alignments)
