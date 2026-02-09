@@ -109,7 +109,7 @@ def main():
 
     default_template_path = \
         os.path.join(repo_root, 'beast_template', 'dna_template.xml') \
-        if 'DNA' in args.alignment else os.path.join(repo_root, 'beast_template', 'prot_template.xml')
+        if 'DNA' in args.alignment else os.path.join(repo_root, 'beast_template', 'protein_template.xml')
 
     alignment_path = args.alignment
     template_path = args.template if args.template else default_template_path
