@@ -14,7 +14,17 @@ This repository contains a Nextflow pipeline for polyketide synthase (PKS) phylo
 
 ## Environment Setup
 
-The pipeline is designed to run with **Nextflow** using a custom **Conda/Mamba** environment defined in `environment.yml`.
+The pipeline is designed to run with [**Nextflow**](https://www.nextflow.io/) using a custom **Conda/Mamba** environment.
+
+### Software Versions
+
+The analysis environment includes the following key software versions defined in `environment.yml`:
+
+*   **Python 3.12**
+*   [**PRANK**](https://ariloytynoja.github.io/prank-msa/) v.170427
+*   [**MAFFT**](https://mafft.cbrc.jp/alignment/server/index.html) v7.526
+*   [**RAxML-ng**](https://github.com/amkozlov/raxml-ng) v2.0-beta3 (supports automatic model selection)
+*   [**BEAST 2**](https://www.beast2.org/) v2.6.3
 
 ### Cluster Setup
 
@@ -35,15 +45,7 @@ micromamba config --set channel_priority disabled
 micromamba create -f environment.yml
 ```
 
-## Software Versions
 
-The environment includes the following software versions:
-*   **Nextflow**
-*   **Python 3.12**
-*   **PRANK**: v.170427
-*   **MAFFT**: v7.526
-*   **RAxML-ng**: v2.0-beta3 (supports automatic model selection)
-*   **BEAST 2**
 
 ## Analysis Steps Detailed
 
