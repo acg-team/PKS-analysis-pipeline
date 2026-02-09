@@ -84,21 +84,42 @@ The pipeline performs automatic cleaning of input FASTA files:
 ### 2. Alignment
 
 #### PRANK
-*   **Purpose**: Aligning sequences with a focus on evolutionary events.
-*   **Settings**: `prank -d=${fasta} -o=${fasta.baseName}.prank -F`
-    *   `-F`: Trusts the inference of insertions; sites appearing as insertions are not re-aligned in later stages.
+
+**Command**:
+
+`prank -d=${fasta} -o=${fasta.baseName}.prank -F`
+
+**Settings**:
+*   `-F`: Trusts the inference of insertions; sites appearing as insertions are not re-aligned in later stages.
 
 #### MAFFT
-*   **Purpose**: Fast and accurate alignment.
-*   **Settings**: `mafft --auto ${fasta} > ${fasta.baseName}.mafft.aln`
-    *   `--auto`: Automatically selects the appropriate strategy based on data size.
+
+**Command**:
+
+`mafft --auto ${fasta} > ${fasta.baseName}.mafft.aln`
+
+**Settings**:
+*   `--auto`: Automatically selects the appropriate strategy based on data size.
 
 ### 3. ML phylogenetics (RAxML-NG)
 
 RAxML-NG (v2.0-beta3) is used for its support of **Automatic Model Selection (MOOSE)** and **Adaptive Tree Search**.
 
+**Command (DNA sequences)**:
+
+`raxml-ng-2 --msa ${alignment} --model DNA --opt-topology adaptive --prefix ${alignment.baseName}`
+
+**Command (protein sequences)**:
+
+`raxml-ng-2 --msa ${alignment} --model AA --moose-options substitution-models=DCMut,JTT,JTT-DCMut,LG,PMB,Q.pfam,Q.yeast,VT,WAG,PROTGTR --opt-topology adaptive --prefix ${alignment.baseName}`
+
+**Settings**:
+*   `--model`: Sets the input sequence type `DNA` for DNA sequences or `AA` for protein sequences.
+*   `--moose-options`: Defines the substitution models to use in model selection (only for protein sequences, described in section [Model Selection](#model-selection)).
+*   `--opt-topology adaptive`: Activates adaptive tree search based on Pythia difficulty scores (described in section [Topology Optimisation](#topology-optimisation)).
+
 #### Model Selection
-The pipeline leverages MOOSE to select the best-fitting evolutionary model. Below is the list of models evaluated, selected based on their applicability to the dataset (bacterial PKS):
+The pipeline uses MOOSE to select the best-fitting evolutionary model. For DNA sequences it will go through all available substitution models (e.g. JC69, K80, GTR), for proteins it will evaluate a list of models in the table below, selected based on their applicability to the dataset (bacterial PKS):
 
 | Model Name    | Reference                   | Included? | Comment                                       |
 | :------------ | :-------------------------- | :-------- | :-------------------------------------------- |
@@ -117,18 +138,42 @@ The pipeline leverages MOOSE to select the best-fitting evolutionary model. Belo
 
 *(Note: Many specific organismal models like HIV, Flu, Mammal, Bird, Plant, Insect, and Mitochondrial models were excluded as they are not applicable to this analysis.)*
 
-#### Topology Optimization
+#### Topology Optimisation
 Tree search is guided by the **Pythia score**, a machine-learning predictor of dataset difficulty (likelihood surface ruggedness).
 *   **Easy datasets**: Single likelihood peak; search converges rapidly and terminates early.
 *   **Difficult datasets**: Many local optima; search finds one good topology quickly to save time.
 *   **Intermediate datasets**: Requires more extensive search.
 
-### 4. Bayesian Phylogenetics (BEAST 2)
+### 4. Bayesian Phylogenetics (Beast2)
 
-The pipeline automates the generation of BEAST 2 XML configuration files and execution.
+The pipeline automates the generation of Beast2 XML configuration files and execution.
 
 *   **XML Generation**: A Python script (`scripts/beast_configuration.py`) automatically generates the XML configuration file for each alignment.
     *   It uses a template (`beast_template/protein_template.xml` for protein sequences or `beast_template/dna_template.xml` for DNA) to ensure consistent parameters.
     *   It parses the FASTA alignment, sanitizes sequence IDs (replacing non-alphanumeric characters), and inserts the sequences into the XML structure.
-*   **Execution**: BEAST 2 is run on the generated XML files to perform Bayesian phylogenetic inference.
-    *   **Settings**: `beast -threads ${task.cpus} -overwrite ${xml}`.
+*   **Beast2 run**: Beast2 is run on the generated XML files to perform Bayesian phylogenetic inference.
+
+**Execution**:
+
+`beast -threads ${task.cpus} -overwrite ${xml}`
+
+**Settings**:
+*   `-threads`: Enables parallelisation based on available CPU count.
+*   `-overwrite`: Allows overwriting of files to prevent getting stuck on user input.
+
+#### Beast2 Analysis Configuration
+
+The pipeline uses two specific templates for Bayesian phylogenetic inference, depending on the input data type. No model selection is available, so the substitution models are fixed.
+
+Template settings:
+
+*   **MCMC Chain Length**: 10,000,000 generations.
+*   **Logging Frequency**: Every 1,000 generations (for trees, trace logs, and screen output).
+*   **Tree Prior**: [Birth-Death Model](https://www.sciencedirect.com/science/article/abs/pii/S0022519308001811?via%3Dihub).
+*   **Clock Model**: Strict Clock with a fixed rate of 1.0.
+*   **Site Model**: Gamma Site Model with 5 categories and invariant sites (G+I).
+*   **Specific Configurations**:
+    * **Protein Alignments** (using `protein_template.xml`):
+        * Substitution Model: [WAG](https://academic.oup.com/mbe/article/18/5/691/1018653).
+    * **DNA Alignments** (using dna_template.xml):
+        * Substitution Model: GTR (General Time Reversible) with estimated base frequencies and rate parameters.
