@@ -28,11 +28,15 @@ The analysis environment includes the following key software versions defined in
 
 ### Cluster Setup
 
-#### UZH HPC
+#### UZH Wagner HPC
+
 Install and configure the environment using Nix and Micromamba:
+
 ```bash
 nix-env --install micromamba
 nix-env --install nextflow
+git clone https://github.com/acg-team/PKS-analysis-pipeline.git
+cd PKS-analysis-pipeline
 micromamba shell init --shell=bash --prefix=~/micromamba
 micromamba create -f environment.yml
 ```
@@ -40,12 +44,31 @@ micromamba create -f environment.yml
 ### Local Setup
 
 #### Standard Workstation (e.g., Linux/Intel Mac)
+
+**Prerequisites**: `micromamba` and `nextflow`  installed.
+
 ```bash
+git clone https://github.com/acg-team/PKS-analysis-pipeline.git
+cd PKS-analysis-pipeline
 micromamba config --set channel_priority disabled
 micromamba create -f environment.yml
 ```
 
+## Running the analysis
 
+**Prerequisites**:
+1. `micromamba` and `nextflow`  installed, pre-configured `micromamba` environment created but not activated.
+2. Data for the analysis placed in the `data/` folder in the repository root folder.
+
+### Running on UZH Wagner HPC
+
+**Prerequisites**: replace the path to the environment in `nextflow_uzh_cluster.config` with the appropriate environment path, e.g.:
+
+`conda = '/home/jpecerska/micromamba/envs/polyketide_analysis'`
+
+To run the pipeline using the Slurm workload manager, run the following command:
+
+`nextflow run pipeline.nf -c nextflow_uzh_cluster.config`
 
 ## Analysis Steps Detailed
 
