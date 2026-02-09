@@ -50,7 +50,6 @@ micromamba create -f environment.yml
 ```bash
 git clone https://github.com/acg-team/PKS-analysis-pipeline.git
 cd PKS-analysis-pipeline
-micromamba config --set channel_priority disabled
 micromamba create -f environment.yml
 ```
 
