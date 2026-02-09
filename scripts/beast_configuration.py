@@ -14,7 +14,7 @@ def generate_beast_config(alignment_path, template_path, output_path):
     print(f"Processing {alignment_path}...")
 
     # Determine character set
-    char_count = 20 if "prot" in alignment_path else 4
+    char_count = 4 if "DNA" in alignment_path else 20
 
     # Parse alignment
     if isinstance(alignment_path, str):
@@ -108,8 +108,8 @@ def main():
         return
 
     default_template_path = \
-        os.path.join(repo_root, 'beast_template', 'protein_template.xml') \
-        if 'prot' in args.alignment else os.path.join(repo_root, 'beast_template', 'dna_template.xml')
+        os.path.join(repo_root, 'beast_template', 'dna_template.xml') \
+        if 'DNA' in args.alignment else os.path.join(repo_root, 'beast_template', 'prot_template.xml')
 
     alignment_path = args.alignment
     template_path = args.template if args.template else default_template_path
