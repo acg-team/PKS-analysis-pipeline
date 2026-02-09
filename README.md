@@ -122,3 +122,13 @@ Tree search is guided by the **Pythia score**, a machine-learning predictor of d
 *   **Easy datasets**: Single likelihood peak; search converges rapidly and terminates early.
 *   **Difficult datasets**: Many local optima; search finds one good topology quickly to save time.
 *   **Intermediate datasets**: Requires more extensive search.
+
+### 4. Bayesian Phylogenetics (BEAST 2)
+
+The pipeline automates the generation of BEAST 2 XML configuration files and execution.
+
+*   **XML Generation**: A Python script (`scripts/beast_configuration.py`) automatically generates the XML configuration file for each alignment.
+    *   It uses a template (`beast_template/protein_template.xml` for protein sequences or `beast_template/dna_template.xml` for DNA) to ensure consistent parameters.
+    *   It parses the FASTA alignment, sanitizes sequence IDs (replacing non-alphanumeric characters), and inserts the sequences into the XML structure.
+*   **Execution**: BEAST 2 is run on the generated XML files to perform Bayesian phylogenetic inference.
+    *   **Settings**: `beast -threads ${task.cpus} -overwrite ${xml}`.
