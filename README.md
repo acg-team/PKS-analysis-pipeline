@@ -70,6 +70,16 @@ To run the pipeline using the Slurm workload manager, run the following command:
 
 `nextflow run pipeline.nf -c nextflow_uzh_cluster.config`
 
+### Running locally
+
+**Prerequisites**: replace the path to the environment in `nextflow_local.config` with the appropriate environment path, e.g.:
+
+`conda = '/usr/local/Cellar/micromamba/2.5.0_1/envs/polyketide_analysis'`
+
+To run the pipeline using the local machine, run the following command:
+
+`nextflow run pipeline.nf -c nextflow_local.config`
+
 ## Analysis Steps Detailed
 
 ### 1. Data Cleaning
