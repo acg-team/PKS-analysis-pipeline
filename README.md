@@ -38,7 +38,18 @@ nix-env --install nextflow
 git clone https://github.com/acg-team/PKS-analysis-pipeline.git
 cd PKS-analysis-pipeline
 micromamba shell init --shell=bash --prefix=~/micromamba
-micromamba create -f environment.yml
+micromamba create -f setup_env/environment.yml
+```
+
+#### ZHAW HPC
+
+Install and configure the environment using a setup bach script:
+
+```bash
+git clone https://github.com/acg-team/PKS-analysis-pipeline.git
+cd PKS-analysis-pipeline/setup_env
+./init_env_zhaw_cluster.sh
+cd ..
 ```
 
 ### Local Setup
@@ -50,7 +61,7 @@ micromamba create -f environment.yml
 ```bash
 git clone https://github.com/acg-team/PKS-analysis-pipeline.git
 cd PKS-analysis-pipeline
-micromamba create -f environment.yml
+micromamba create -f setup_env/environment.yml
 ```
 
 ## Running The Analysis
