@@ -30,28 +30,18 @@ The analysis environment includes the following key software versions defined in
 
 #### UZH Wagner HPC
 
-Install and configure the environment using a setup bash script.
+Install and configure the environment using a setup bash script:
 
-**For the first run only**:
 ```bash
-echo 'export PATH="${HOME}/bin:${PATH}"' >> ~/.bashrc
-source ~/.bashrc
 git clone https://github.com/acg-team/PKS-analysis-pipeline.git
 cd PKS-analysis-pipeline/setup_env
-./init_env_uzh_cluster.sh
-cd ..
-```
-
-When running the pipeline for the second/third/... time, use the initialisation script to update micromamba/nextflow:
-```bash
-cd PKS-analysis-pipeline/setup_env
-./init_env_uzh_cluster.sh
+source init_env_uzh_cluster.sh
 cd ..
 ```
 
 #### ZHAW HPC
 
-Install and configure the environment using a setup bach script:
+Install and configure the environment using a setup bash script:
 
 ```bash
 git clone https://github.com/acg-team/PKS-analysis-pipeline.git
