@@ -4,6 +4,7 @@
 set -eEuo pipefail
 
 export CFS_HOME=${HOME}
+export PATH=${HOME}/bin:${PATH}
 
 # ## install micromamba
 if [[ ! -f ${CFS_HOME:?}/bin/micromamba ]]; then
