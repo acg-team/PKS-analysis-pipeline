@@ -56,7 +56,7 @@ Install and configure the environment using a setup bach script:
 ```bash
 git clone https://github.com/acg-team/PKS-analysis-pipeline.git
 cd PKS-analysis-pipeline/setup_env
-./init_env_zhaw_cluster.sh
+source init_env_zhaw_cluster.sh
 cd ..
 ```
 
