@@ -27,6 +27,12 @@ if ! micromamba env list | grep -Eq "^\s*${env_name:?} "; then
     micromamba -y create -f ${environment_file:?} || { echo "environment creation failed!"; exit 1; }
 fi
 
+# ## install java via nix if not already available
+if [[ ! -f ${CFS_HOME:?}/.nix-profile/bin/java ]]; then
+    echo "installing java via nix"
+    nix-env --install openjdk
+fi
+
 # ## install nextflow
 if [[ ! -f ${CFS_HOME:?}/bin/nextflow ]]; then
     curl -s https://get.nextflow.io | bash
