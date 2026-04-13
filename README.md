@@ -125,11 +125,11 @@ RAxML-NG (v2.0-beta3) is used for its support of **Automatic Model Selection (MO
 
 **Command (DNA sequences)**:
 
-`raxml-ng-2 --msa ${alignment} --model DNA --opt-topology adaptive --prefix ${alignment.baseName}`
+`raxml-ng --msa ${alignment} --model DNA --opt-topology adaptive --prefix ${alignment.baseName}`
 
 **Command (protein sequences)**:
 
-`raxml-ng-2 --msa ${alignment} --model AA --moose-options substitution-models=DCMut,JTT,JTT-DCMut,LG,PMB,Q.pfam,Q.yeast,VT,WAG,PROTGTR --opt-topology adaptive --prefix ${alignment.baseName}`
+`raxml-ng --msa ${alignment} --model AA --moose-options substitution-models=DCMut,JTT,JTT-DCMut,LG,PMB,Q.pfam,Q.yeast,VT,WAG,PROTGTR --opt-topology adaptive --prefix ${alignment.baseName}`
 
 **Settings**:
 *   `--model`: Sets the input sequence type `DNA` for DNA sequences or `AA` for protein sequences.
