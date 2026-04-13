@@ -39,17 +39,6 @@ source init_env_uzh_cluster.sh
 cd ..
 ```
 
-#### ZHAW HPC
-
-Install and configure the environment using a setup bash script:
-
-```bash
-git clone https://github.com/acg-team/PKS-analysis-pipeline.git
-cd PKS-analysis-pipeline/setup_env
-source init_env_zhaw_cluster.sh
-cd ..
-```
-
 ### Local Setup
 
 #### Standard Workstation (e.g., Linux/Intel Mac)
