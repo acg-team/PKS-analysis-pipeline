@@ -42,4 +42,10 @@ if [[ ! -f ${CFS_HOME:?}/bin/nextflow ]]; then
 else
     nextflow self-update
 fi
+
+# ## copy raxml-ng binary if not already available
+if [[ ! -f ${CFS_HOME:?}/bin/raxml-ng ]]; then
+    cp ./raxml-ng ${CFS_HOME:?}/bin/raxml-ng
+fi
+
 echo "setup done"
